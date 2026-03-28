@@ -1,0 +1,22 @@
+{
+  "short_name": "NutriAI",
+  "name": "NutriAI - AI Food Tracker",
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#6366f1",
+  "description": "AI-powered food recognition and calorie tracker."
+}
