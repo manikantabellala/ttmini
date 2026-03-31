@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – ttmini{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Dashboard <span class="date-badge">Last 7 Days</span></h1>
+
+<!-- Today's summary cards -->
+<section class="card summary-row">
+  <div class="macro-box calories">
+    <span class="macro-value">{{ today_totals.calories }}</span>
+    <span class="macro-label">Today kcal</span>
+  </div>
+  <div class="macro-box protein">
+    <span class="macro-value">{{ today_totals.protein }}g</span>
+    <span class="macro-label">Today Protein</span>
+  </div>
+  <div class="macro-box carbs">
+    <span class="macro-value">{{ today_totals.carbs }}g</span>
+    <span class="macro-label">Today Carbs</span>
+  </div>
+  <div class="macro-box fat">
+    <span class="macro-value">{{ today_totals.fat }}g</span>
+    <span class="macro-label">Today Fat</span>
+  </div>
+</section>
+
+<!-- Calories chart -->
+<section class="card">
+  <h2>Daily Calories (7-day)</h2>
+  <canvas id="caloriesChart" height="80"></canvas>
+</section>
+
+<!-- Macros chart -->
+<section class="card">
+  <h2>Daily Macros (7-day)</h2>
+  <canvas id="macrosChart" height="80"></canvas>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
+<script>
+  const RAW = {{ chart_data | safe }};
+
+  // Calories bar chart
+  new Chart(document.getElementById('caloriesChart'), {
+    type: 'bar',
+    data: {
+      labels: RAW.labels,
+      datasets: [{
+        label: 'Calories (kcal)',
+        data: RAW.calories,
+        backgroundColor: 'rgba(255, 107, 107, 0.7)',
+        borderColor: 'rgba(255, 107, 107, 1)',
+        borderWidth: 1,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Macros line chart
+  new Chart(document.getElementById('macrosChart'), {
+    type: 'line',
+    data: {
+      labels: RAW.labels,
+      datasets: [
+        {
+          label: 'Protein (g)',
+          data: RAW.protein,
+          borderColor: 'rgba(74, 144, 226, 1)',
+          backgroundColor: 'rgba(74, 144, 226, 0.1)',
+          fill: true,
+          tension: 0.3,
+        },
+        {
+          label: 'Carbs (g)',
+          data: RAW.carbs,
+          borderColor: 'rgba(80, 200, 120, 1)',
+          backgroundColor: 'rgba(80, 200, 120, 0.1)',
+          fill: true,
+          tension: 0.3,
+        },
+        {
+          label: 'Fat (g)',
+          data: RAW.fat,
+          borderColor: 'rgba(255, 193, 7, 1)',
+          backgroundColor: 'rgba(255, 193, 7, 0.1)',
+          fill: true,
+          tension: 0.3,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+</script>
+{% endblock %}

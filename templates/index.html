@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Log Food – ttmini{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Log Food <span class="date-badge">{{ today }}</span></h1>
+
+<!-- Add food form -->
+<section class="card">
+  <h2>Add Food Entry</h2>
+  <div class="form-row">
+    <div class="input-group search-group">
+      <input id="foodSearch" type="text" placeholder="Search food (e.g. chicken breast)…" autocomplete="off" />
+      <div id="searchSuggestion" class="suggestion-box hidden"></div>
+    </div>
+    <input id="quantity" type="number" min="1" step="1" value="100" placeholder="Grams" />
+    <select id="mealType">
+      <option value="breakfast">Breakfast</option>
+      <option value="lunch">Lunch</option>
+      <option value="dinner">Dinner</option>
+      <option value="snack" selected>Snack</option>
+    </select>
+    <button id="addBtn" class="btn-primary">Add</button>
+  </div>
+  <p id="formMsg" class="form-msg hidden"></p>
+</section>
+
+<!-- Today's summary -->
+<section class="card summary-row">
+  <div class="macro-box calories" id="sumCalories">
+    <span class="macro-value">{{ totals.calories }}</span>
+    <span class="macro-label">kcal</span>
+  </div>
+  <div class="macro-box protein" id="sumProtein">
+    <span class="macro-value">{{ totals.protein }}g</span>
+    <span class="macro-label">Protein</span>
+  </div>
+  <div class="macro-box carbs" id="sumCarbs">
+    <span class="macro-value">{{ totals.carbs }}g</span>
+    <span class="macro-label">Carbs</span>
+  </div>
+  <div class="macro-box fat" id="sumFat">
+    <span class="macro-value">{{ totals.fat }}g</span>
+    <span class="macro-label">Fat</span>
+  </div>
+</section>
+
+<!-- Food entries table -->
+<section class="card">
+  <h2>Today's Entries</h2>
+  <table class="food-table" id="foodTable">
+    <thead>
+      <tr>
+        <th>Food</th>
+        <th>Meal</th>
+        <th>Qty (g)</th>
+        <th>kcal</th>
+        <th>Protein</th>
+        <th>Carbs</th>
+        <th>Fat</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="foodTableBody">
+      {% for e in entries %}
+      <tr data-id="{{ e.id }}">
+        <td>{{ e.food_name }}</td>
+        <td>{{ e.meal_type }}</td>
+        <td>{{ e.quantity_grams }}</td>
+        <td>{{ e.calories }}</td>
+        <td>{{ e.protein_g }}g</td>
+        <td>{{ e.carbs_g }}g</td>
+        <td>{{ e.fat_g }}g</td>
+        <td><button class="btn-delete" onclick="deleteEntry({{ e.id }})">✕</button></td>
+      </tr>
+      {% else %}
+      <tr id="emptyRow"><td colspan="8" class="empty-msg">No entries yet. Add your first meal!</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
